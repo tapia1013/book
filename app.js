@@ -61,6 +61,14 @@ UI.prototype.showAlert = function (message, className) {
 }
 
 
+// DELETE BOOK
+UI.prototype.deleteBook = function (target) {
+  if (target.className === 'delete') {
+    target.parentElement.parentElement.remove();
+  }
+
+}
+
 // CLear Fields
 UI.prototype.clearFields = function () {
   document.getElementById('title').value = '';
@@ -71,7 +79,7 @@ UI.prototype.clearFields = function () {
 
 
 
-// Event Listeners
+// Event Listeners for add book
 document.getElementById('book-form').addEventListener('submit', function (e) {
 
   // GET FORM VALUES
@@ -109,5 +117,25 @@ document.getElementById('book-form').addEventListener('submit', function (e) {
   }
 
   e.preventDefault();
-})
+});
 
+
+
+
+// Event Listener for delete
+// we're going to use the parent of what we want
+document.getElementById('book-list').addEventListener('click', function (e) {
+
+  // Instantiate the UI
+  const ui = new UI();
+
+  // delete target book
+  ui.deleteBook(e.target);
+
+
+  // Show alert if deleted   'msg' , 'class'
+  ui.showAlert('Book Removed!', 'success')
+
+
+  e.preventDefault()
+})
