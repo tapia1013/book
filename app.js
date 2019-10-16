@@ -17,7 +17,7 @@ function UI() { }
 UI.prototype.addBookToList = function (book) {
   const list = document.getElementById('book-list')
 
-  // Create aT <tr></tr> element
+  // Create a <tr></tr> element
   const row = document.createElement('tr')
 
   // INSERT COLS ... take <tr></tr> and append
@@ -95,6 +95,10 @@ document.getElementById('book-form').addEventListener('submit', function (e) {
 
   //Instantiate a UI object
   const ui = new UI();
+
+  // shows inside the proto all the ui.prototypes
+  console.log(ui);
+
 
   // Validate
   if (title === '' || author === '' || isbn === '') {
