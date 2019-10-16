@@ -1,3 +1,5 @@
+//                   ES6 WAY METHOD
+
 class Book {
   // going to take in title author isbn
   constructor(title, author, isbn) {
@@ -71,6 +73,92 @@ class UI {
 }
 
 
+
+
+// LOCAL STORAGE CLASS
+class Store {
+  // GET BOOKS will take care of fetching books from LS
+  static getBooks() {
+    // initialize a var called books
+    let books;
+
+    // check LOCAL STORAGE... if not there null else
+    if (localStorage.getItem('books') === null) {
+      // if not there/null = empty array
+      books = [];
+
+    } else {
+      //  then books is going to get book item from LS
+      // we need it to be a JS object so parse it
+      books = JSON.parse(localStorage.getItem('books'))
+
+    }
+
+    // then return books
+    return books;
+
+  }
+
+  // will take care of displaying the book in the UI
+  static displayBooks() {
+    // displat the addBooks from beloe in the UI html
+    // first we get the books
+    const books = Store.getBooks()
+
+    // loop through books with forEach
+    books.forEach(function (book) {
+      // Instantiate UI
+      const ui = new UI;
+
+      // Add book to UI
+      ui.addBookToList(book);
+
+    })
+
+  }
+
+  // Add book will add to LOCAL STORAGE
+  static addBook(book) {
+    // we use the class name cause its a static method
+    const books = Store.getBooks();
+
+    // push on to books
+    books.push(book)
+
+    // set LS with the new book      stringify the array
+    localStorage.setItem('books', JSON.stringify(books))
+
+
+  }
+
+  // we need something unique to remove since we have no ID so we use the isbn
+  static removeBook(isbn) {
+    const books = Store.getBooks()
+
+    // loop to remove
+    books.forEach(function (book, index) {
+      // if isbn is the one being passed through (isbn)
+      if (book.isbn === isbn) {
+        // splice index remove 1
+        books.splice(index, 1)
+      }
+    });
+
+    // Set local storgae again after running loop
+    localStorage.setItem('books', JSON.stringify(books))
+
+  }
+}
+
+
+
+//                    DOM LOAD EVENT
+//when the DOMCont is loaded then we call Store.displayB func
+document.addEventListener('DOMContentLoaded', Store.displayBooks);
+
+
+
+
 // Event Listeners for adding books
 document.getElementById('book-form').addEventListener('submit', function (e) {
   // Get form values
@@ -93,12 +181,17 @@ document.getElementById('book-form').addEventListener('submit', function (e) {
   } else {
     // Add book list
     ui.addBookToList(book);
+    // Add to LOCAL STORAGE
+    Store.addBook(book)
 
     // Show success
     ui.showAlert('Book Added!', 'success');
 
     // Clear fields
     ui.clearFields();
+
+    console.log(ui);
+
 
   }
 
@@ -113,6 +206,10 @@ document.getElementById('book-list').addEventListener('click', function (e) {
 
   // Delete Book
   ui.deleteBook(e.target);
+
+  // Remove From LOCAL STORAGE
+  // icon.parentTD.prevEl(isbn).textCont(isbn#)
+  Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
 
   // Show Message
   ui.showAlert('Book Removed!', 'success')
