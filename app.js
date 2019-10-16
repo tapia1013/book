@@ -79,6 +79,73 @@ UI.prototype.clearFields = function () {
 
 
 
+// LOCAL STORAGE
+function Store() { }
+
+
+Store.prototype.getBooks = function () {
+
+  let books;
+
+  if (localStorage.getItem('books') === null) {
+    books = [];
+  } else {
+    books = JSON.parse(localStorage.getItem('books'))
+  }
+
+  return books;
+}
+
+
+
+
+Store.prototype.displayBooks = function () {
+  const books = Store.getBooks()
+
+  books.forEach(function (book) {
+    const ui = new UI;
+
+    ui.addBookToList(book)
+  })
+}
+
+
+
+
+
+Store.prototype.addBook = function (book) {
+  const books = Store.getBooks();
+
+  books.push(book)
+
+  localStorage.setItem('books', JSON.stringify(books))
+}
+
+
+
+Store.prototype.removeBook = function (isbn) {
+  const books = Store.getBooks()
+
+  books.forEach(function (book, index) {
+    if (book.isbn === isbn) {
+      books.splice(index, 1)
+    }
+  })
+
+  localStorage.setItem('books', JSON.stringify(books))
+
+}
+
+document.addEventListener('DOMContentLoaded', Store.displayBooks)
+
+
+
+
+
+
+
+
+
 // Event Listeners for add book
 document.getElementById('book-form').addEventListener('submit', function (e) {
 
